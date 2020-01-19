@@ -1,5 +1,5 @@
 [user]
-	email = levi.malott@gmail.com
+	email = levi@malott.co
 	name = levi malott
 [alias]
   co = checkout
@@ -20,7 +20,10 @@
   stat = !git diff --stat $(git merge-base HEAD \"$REVIEW_BASE\")
   review = !vim -p $(git files) +\"tabdo Gdiff $REVIEW_BASE\" +\"let g:gitgutter_diff_base = '$REVIEW_BASE'\"
   reviewone = !vim -p +\"tabdo Gdiff $REVIEW_BASE\" +\"let g:gitgutter_diff_base = '$REVIEW_BASE'\"
+  ctags = !.git/hooks/ctags
 
 
 
 
+[init]
+	templatedir = ~/.git_template
