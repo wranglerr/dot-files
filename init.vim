@@ -5,7 +5,6 @@ filetype off
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'scrooloose/nerdtree'
-Plug 'rking/ag.vim'
 Plug 'nvie/vim-flake8'
 Plug 'bling/vim-airline'
 Plug 'christoomey/vim-tmux-navigator'
@@ -13,7 +12,6 @@ Plug 'tmhedberg/SimpylFold'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'lervag/vimtex'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'chriskempson/base16-vim'
 Plug 'rhysd/vim-grammarous'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -22,9 +20,12 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'thosakwe/vim-flutter'
-Plug '/usr/local/opt/fzf'
+Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'https://github.com/Alok/notational-fzf-vim'
+Plug 'deoplete-plugins/deoplete-jedi'
+Plug 'dense-analysis/ale'
+Plug 'robertmeta/nofrils'
 
 call plug#end()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -72,7 +73,7 @@ set laststatus=2
 
 "let loaded_matchparen = 1
 set path+=**
-"set tags=tags;/
+set tags=.git/tags,tags;/
 
 set showmatch
 set so=999                          "scrolloff (keeps cursor in middle of screen)
@@ -216,15 +217,6 @@ let g:vimtex_view_general_viewer = 'okular'
 let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
 let g:vimtex_view_general_options_latexmk = '--unique'
 
-let g:ctrlp_custom_ignore = {
-\ 'dir': '\v[\/]\.(git|hg|svn)$',
-\ 'file': '\v\.(exe|so|dll)$',
-\ }
-let g:ctrlp_working_path_mode = 'ar'            
-let g:ctrlp_use_caching = 0
-set grepprg=ag\ --nogroup\ --nocolor
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-
 let g:deoplete#enable_at_startup = 1
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
@@ -237,25 +229,28 @@ autocmd QuickFixCmdPost    l* nested lwindow
 
 autocmd BufNewFile,BufRead *.post set syntax=yaml
 
-if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
-  source ~/.vimrc_background
-endif
+"if filereadable(expand("~/.vimrc_background"))
+"  let base16colorspace=256
+"  source ~/.vimrc_background
+"endif
+colorscheme nofrils-dark
 
 autocmd Filetype html setlocal ts=2 sw=2 expandtab
 autocmd Filetype yaml setlocal ts=2 sw=2 expandtab
 autocmd Filetype markdown setlocal ts=2 sw=2 expandtab
 autocmd Filetype ruby setlocal ts=2 sw=2 expandtab
 autocmd Filetype dart setlocal ts=2 sw=2 expandtab
-
-" Some of these key choices were arbitrary;
-" it's just an example.
-nnoremap <leader>fa :FlutterRun<cr>
-nnoremap <leader>fq :FlutterQuit<cr>
-nnoremap <leader>fr :FlutterHotReload<cr>
-nnoremap <leader>fR :FlutterHotRestart<cr>
+autocmd Filetype sql setlocal ts=2 sw=2 expandtab
 
 nnoremap <C-p> :Files<Cr>
 nnoremap <C-g> :Rg<Cr>
 
 let g:nv_search_paths = ['~/wiki', '~/writing', 'docs.md' , './notes.md']
+
+let g:python3_host_porg=expand('~/venv/bin/python')
+let g:python_host_prog=expand('~/venv/bin/python')
+let g:ale_python_flake8_executable = 'python' 
+let b:ale_linters = {'py': ['flake8']}
+let b:ale_fixers = {'py': ['black']}
+
+let g:nofrils_heavycomments=1
