@@ -5,11 +5,11 @@ filetype off
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'scrooloose/nerdtree'
-Plug 'nvie/vim-flake8'
 Plug 'bling/vim-airline'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tmhedberg/SimpylFold'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'lervag/vimtex'
 Plug 'chriskempson/base16-vim'
@@ -18,14 +18,17 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'ervandew/supertab'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'dart-lang/dart-vim-plugin'
-Plug 'thosakwe/vim-flutter'
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
-Plug 'https://github.com/Alok/notational-fzf-vim'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
 Plug 'deoplete-plugins/deoplete-jedi'
 Plug 'dense-analysis/ale'
 Plug 'robertmeta/nofrils'
+Plug 'janko/vim-test'
+Plug 'benmills/vimux'
+Plug 'owickstrom/vim-colors-paramount'
+
 
 call plug#end()
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -33,17 +36,17 @@ call plug#end()
 filetype plugin indent on
 
 "" Custom Keybinds
-autocmd InsertEnter * :set number
-autocmd InsertLeave * :set relativenumber
+"autocmd InsertEnter * :set number
+"autocmd InsertLeave * :set relativenumber
 "better leader than [
 let mapleader=","
 let g:mapleader=","
 
 "opens a shell inside vim <C-d> while in that shell to exit back to vim
-noremap <C-d> :sh<cr> 
+noremap <C-d> :sh<cr>
 
 "fast exit from insert mode
-imap jk <Esc>         
+imap jk <Esc>
 
 "big ol' leader
 map <Space> <leader>
@@ -80,7 +83,7 @@ set so=999                          "scrolloff (keeps cursor in middle of screen
 set nu                              "enable line numbers
 set wildmenu
 set wildignore=*.o,*~,*.pyc
-set wildignore+=*.swp,*.zip,*.exe,*/tmp/* 
+set wildignore+=*.swp,*.zip,*.exe,*/tmp/*
 set ruler
 set cmdheight=2
 set hid
@@ -116,7 +119,7 @@ set shiftwidth=4
 set tabstop=4
 set lbr
 set tw=500
-set ai 
+set ai
 set si
 set wrap
 
@@ -141,10 +144,10 @@ let NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$',  '\~$']
 let g:NERDTreeWinPos="right"
 let NERDTreeShowBookmarks=1
 map <leader>nn :NERDTreeToggle<CR>
-"pydocstring maptting 
+"pydocstring maptting
 nmap <silent> <F3> <Plug>(pydocstring)
 
-let g:airline_theme='dracula'
+"let g:airline_theme='dracula'
 "Enable the list of buffers
 let g:airline#extensions#tabline#enabled = 1
 
@@ -159,7 +162,7 @@ set hidden
 " To open a new empty buffer
 " This replaces :tabnew which I used to bind to this mapping
 " <space> is mapped to <leader> in this config
-nmap <leader>T :enew<cr> 
+nmap <leader>T :enew<cr>
 
 " Move to the next buffer
 nmap <leader>l :bnext<CR>
@@ -180,13 +183,13 @@ let g:pymode_doc = 1
 let g:pymode_doc_key = 'K'
 
 "Linting
-let g:pymode_lint = 0 
+let g:pymode_lint = 0
 let g:pymode_lint_checker = "pyflakes,pep8"
 " Auto check on save
 let g:pymode_lint_write = 0
 
 " Support virtualenv
-let g:pymode_virtualenv = 0 
+let g:pymode_virtualenv = 0
 
 " Enable breakpoints plugin
 let g:pymode_breakpoint = 1
@@ -217,6 +220,8 @@ let g:vimtex_view_general_viewer = 'okular'
 let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
 let g:vimtex_view_general_options_latexmk = '--unique'
 
+let g:python3_host_porg=expand('~/venv/bin/python')
+let g:python_host_prog=expand('~/venv/bin/python')
 let g:deoplete#enable_at_startup = 1
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
@@ -233,24 +238,78 @@ autocmd BufNewFile,BufRead *.post set syntax=yaml
 "  let base16colorspace=256
 "  source ~/.vimrc_background
 "endif
-colorscheme nofrils-dark
+colorscheme paramount
 
 autocmd Filetype html setlocal ts=2 sw=2 expandtab
+autocmd Filetype htmldango setlocal ts=2 sw=2 expandtab
 autocmd Filetype yaml setlocal ts=2 sw=2 expandtab
 autocmd Filetype markdown setlocal ts=2 sw=2 expandtab
 autocmd Filetype ruby setlocal ts=2 sw=2 expandtab
 autocmd Filetype dart setlocal ts=2 sw=2 expandtab
 autocmd Filetype sql setlocal ts=2 sw=2 expandtab
+autocmd Filetype javascript setlocal ts=2 sw=2 expandtab
 
 nnoremap <C-p> :Files<Cr>
 nnoremap <C-g> :Rg<Cr>
 
-let g:nv_search_paths = ['~/wiki', '~/writing', 'docs.md' , './notes.md']
 
-let g:python3_host_porg=expand('~/venv/bin/python')
-let g:python_host_prog=expand('~/venv/bin/python')
-let g:ale_python_flake8_executable = 'python' 
-let b:ale_linters = {'py': ['flake8']}
-let b:ale_fixers = {'py': ['black']}
+let g:ale_python_flake8_executable = 'python'
+let g:ale_linters = {'python': ['flake8']}
+let g:ale_fixers = ['black', 'isort']
+let g:ale_fix_on_save = 0
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
 let g:nofrils_heavycomments=1
+
+set t_ZH=^[[3m
+set t_ZR=^[[23m
+
+autocmd BufWritePre *.py %s/\s\+$//e
+
+
+function! s:goyo_enter()
+  "if executable('tmux') && strlen($TMUX)
+  "  silent !tmux set status off
+  "  silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+  "endif
+  set noshowmode
+  set noshowcmd
+  set scrolloff=999
+  Limelight
+  hi comment ctermfg=141
+  " ...
+endfunction
+
+function! s:goyo_leave()
+ " if executable('tmux') && strlen($TMUX)
+  "  silent !tmux set status on
+  "  silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+  "endif
+  set showmode
+  set showcmd
+  set scrolloff=5
+  Limelight!
+  hi comment ctermfg=141
+  " ...
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
+nmap <Leader>g <Plug>(Goyo)
+xmap <Leader>g <Plug>(Goyo)
+
+" these "Ctrl mappings" work well when Caps Lock is mapped to Ctrl
+nmap <silent> t<C-n> :TestNearest<CR>
+nmap <silent> t<C-f> :TestFile<CR>
+nmap <silent> t<C-s> :TestSuite<CR>
+nmap <silent> t<C-l> :TestLast<CR>
+nmap <silent> t<C-g> :TestVisit<CR>
+let test#strategy = "vimux"
+
+" Turn comments a dark purple.
+" hi comment ctermfg=141
+
+packadd vimball
