@@ -76,7 +76,7 @@ set laststatus=2
 
 "let loaded_matchparen = 1
 set path+=**
-set tags=.git/tags,tags;/
+set tags+=.git/tags,tags;/
 
 set showmatch
 set so=999                          "scrolloff (keeps cursor in middle of screen)
