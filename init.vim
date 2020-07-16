@@ -10,10 +10,8 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'tmhedberg/SimpylFold'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'lervag/vimtex'
 Plug 'chriskempson/base16-vim'
-Plug 'rhysd/vim-grammarous'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'ervandew/supertab'
 Plug 'SirVer/ultisnips'
@@ -28,6 +26,10 @@ Plug 'robertmeta/nofrils'
 Plug 'janko/vim-test'
 Plug 'benmills/vimux'
 Plug 'owickstrom/vim-colors-paramount'
+Plug 'ternjs/tern_for_vim', { 'do': 'npm install && npm install -g tern' }
+Plug 'carlitux/deoplete-ternjs'
+Plug 'pangloss/vim-javascript'
+Plug 'MaxMEllon/vim-jsx-pretty'
 
 
 call plug#end()
@@ -223,6 +225,16 @@ let g:vimtex_view_general_options_latexmk = '--unique'
 let g:python3_host_porg=expand('~/venv/bin/python')
 let g:python_host_prog=expand('~/venv/bin/python')
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_ignore_case = 1
+let g:deoplete#enable_smart_case = 1
+let g:deoplete#enable_camel_case = 1
+let g:deoplete#enable_refresh_always = 1
+let g:deoplete#max_abbr_width = 0
+let g:deoplete#max_menu_width = 0
+let g:tern_request_timeout = 1
+let g:tern_request_timeout = 6000
+let g:tern#command = ["tern"]
+let g:tern#arguments = [" — persistent"]
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:SuperTabDefaultCompletionType = "<c-n>"
@@ -260,6 +272,8 @@ let g:ale_fix_on_save = 0
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_sign_error = '❌'
+let g:ale_sign_warning = '⚠️'
 
 let g:nofrils_heavycomments=1
 
