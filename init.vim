@@ -4,6 +4,7 @@ filetype off
 """"""""""""""""""""""""""""VUNDLE""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin('~/.local/share/nvim/plugged')
 
+Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'bling/vim-airline'
 Plug 'christoomey/vim-tmux-navigator'
@@ -222,13 +223,11 @@ let g:vimtex_view_general_viewer = 'okular'
 let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
 let g:vimtex_view_general_options_latexmk = '--unique'
 
-let g:python3_host_porg=expand('~/venv/bin/python')
-let g:python_host_prog=expand('~/venv/bin/python')
+let g:python3_host_prog=expand('~/venv/bin/python3')
+let g:python_host_prog=expand('~/venv/bin/python3')
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 1
-let g:deoplete#enable_smart_case = 1
 let g:deoplete#enable_camel_case = 1
-let g:deoplete#enable_refresh_always = 1
 let g:deoplete#max_abbr_width = 0
 let g:deoplete#max_menu_width = 0
 let g:tern_request_timeout = 1
@@ -322,8 +321,24 @@ nmap <silent> t<C-s> :TestSuite<CR>
 nmap <silent> t<C-l> :TestLast<CR>
 nmap <silent> t<C-g> :TestVisit<CR>
 let test#strategy = "vimux"
+let test#python#runner = 'pytest'
 
-" Turn comments a dark purple.
-" hi comment ctermfg=141
 
-packadd vimball
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:50%'), <bang>0)
+
+let g:ackprg = 'rg --vimgrep --type-not sql --smart-case'
+
+" Auto close the Quickfix list after pressing '<enter>' on a list item
+let g:ack_autoclose = 1
+
+" Any empty ack search will search for the work the cursor is on
+let g:ack_use_cword_for_empty_search = 1
+
+" Don't jump to first match
+cnoreabbrev Ack Ack!
+
+" Maps <leader>/ so we're ready to type the search keyword
+nnoremap <Leader>/ :Ack!<Space>
