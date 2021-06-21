@@ -6,7 +6,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdtree'
-Plug 'bling/vim-airline'
+Plug 'itchyny/lightline.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tmhedberg/SimpylFold'
 Plug 'tpope/vim-fugitive'
@@ -31,6 +31,9 @@ Plug 'ternjs/tern_for_vim', { 'do': 'npm install && npm install -g tern' }
 Plug 'carlitux/deoplete-ternjs'
 Plug 'pangloss/vim-javascript'
 Plug 'MaxMEllon/vim-jsx-pretty'
+Plug 'fxn/vim-monochrome'
+Plug 'cideM/yui'
+Plug 'tpope/vim-commentary'
 
 
 call plug#end()
@@ -70,6 +73,8 @@ nnoremap ,case :-1read $HOME/.vim/.case.py<CR>3jwf>a
 
 "always show status line
 set laststatus=2
+" Show full path in status line
+set statusline+="%F"
 
 " Smart way to move between windows
 "map <C-j> <C-W>j
@@ -146,18 +151,16 @@ let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$', '\.swp$']
 let NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$',  '\~$']
 let g:NERDTreeWinPos="right"
 let NERDTreeShowBookmarks=1
-map <leader>nn :NERDTreeToggle<CR>
+map <leader>nn :NERDTreeToggle %<CR>
 "pydocstring maptting
 nmap <silent> <F3> <Plug>(pydocstring)
 
-"let g:airline_theme='dracula'
-"Enable the list of buffers
-let g:airline#extensions#tabline#enabled = 1
-
-" Show just the filename
-let g:airline#extensions#tabline#fnamemod = ':t'
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ }
 
 " Buffer management
+
 "This allows buffers to be hidden if you've modified a buffer.
 " This is almost a must if you wish to use buffers in this way.
 set hidden
@@ -249,7 +252,8 @@ autocmd BufNewFile,BufRead *.post set syntax=yaml
 "  let base16colorspace=256
 "  source ~/.vimrc_background
 "endif
-colorscheme paramount
+let g:monochrome_italic_comments = 1
+colorscheme monochrome
 
 autocmd Filetype html setlocal ts=2 sw=2 expandtab
 autocmd Filetype htmldango setlocal ts=2 sw=2 expandtab
@@ -264,15 +268,19 @@ nnoremap <C-p> :Files<Cr>
 nnoremap <C-g> :Rg<Cr>
 
 
-let g:ale_python_flake8_executable = 'python'
+let g:ale_python_flake8_executable = 'flake8'
 let g:ale_linters = {'python': ['flake8']}
 let g:ale_fixers = ['black', 'isort']
 let g:ale_fix_on_save = 0
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_sign_error = '❌'
-let g:ale_sign_warning = '⚠️'
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '.'
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+highlight ALEErrorSign ctermbg=NONE ctermfg=red
+highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
 let g:nofrils_heavycomments=1
 
